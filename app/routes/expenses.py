@@ -35,3 +35,34 @@ def create_expense():
         "message": "Expense created successfully",
         "id": expense.id
     }), 201
+    
+@expenses_bp.route("/",methods=["GET"])
+def get_all_expenses():
+    expenses = Expense.query.all()
+
+    result = []
+    for expense in expenses:
+        result.append({
+            "id": expense.id,
+            "amount": expense.amount,
+            "category": expense.category,
+            "description": expense.description,
+            "date": expense.date.isoformat()
+        })
+
+    return jsonify(result), 200
+
+@expenses_bp.route("/<int:expense_id>",methods=["GET"])
+def get_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+    
+    if not expense:
+        return jsonify({"error": "Expense not found"}), 404
+    
+    return jsonify({
+    "id": expense.id,
+    "amount": expense.amount,
+    "category": expense.category,
+    "description": expense.description,
+    "date": expense.date.isoformat()
+}), 200
