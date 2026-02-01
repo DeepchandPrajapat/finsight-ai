@@ -19,3 +19,12 @@ GET http://127.0.0.1:5000/api/expenses/
 
 ###
 GET http://127.0.0.1:5000/api/expenses/1
+
+###
+PATCH  http://127.0.0.1:5000/api/expenses/1
+Content-Type: application/json
+
+{
+  "amount": 999,
+  "category": "Gaming"
+}

@@ -47,7 +47,8 @@ def get_all_expenses():
             "amount": expense.amount,
             "category": expense.category,
             "description": expense.description,
-            "date": expense.date.isoformat()
+            "created_at": expense.created_at.isoformat(),
+            "updated_at": expense.updated_at.isoformat()
         })
 
     return jsonify(result), 200
@@ -64,5 +65,30 @@ def get_expense(expense_id):
     "amount": expense.amount,
     "category": expense.category,
     "description": expense.description,
-    "date": expense.date.isoformat()
+    "created_at": expense.date.isoformat(),
+    "updated_at": expense.date.isoformat()
 }), 200
+
+@expenses_bp.route("/<int:expense_id>", methods=["PATCH"])
+def update_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+
+    if not expense:
+        return jsonify({"error": "Expense not found"}), 404
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    expense.amount = data.get("amount", expense.amount)
+    expense.category = data.get("category", expense.category)
+    expense.description = data.get("description", expense.description)
+
+    db.session.commit()
+
+    return jsonify({"message": "Expense updated successfully"}), 200
+
+
+
+    
