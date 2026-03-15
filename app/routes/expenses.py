@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify,current_app
 from ..models import Expense
 from ..extensions import db
+import google.generativeai as genai
 
 expenses_bp = Blueprint(
     "expenses",
@@ -101,6 +102,41 @@ def delete_expense(expense_id):
     
     return jsonify({"message": "Expense deleted successfully"}), 200
 
+@expenses_bp.route("/ai-insights",methods=["GET"])
+def get_ai_insights():
+    expenses=Expense.query.all()
+    
+    if not expenses:
+        return jsonify({"error": "No expenses found"}), 404
+    
+    expense_text=""
+    for expense in expenses:
+        expense_text += f"Category: {expense.category}, Amount: {expense.amount}, Description: {expense.description}, Date: {expense.created_at.strftime('%Y-%m-%d')}\n"
+        
+    genai.configure(api_key=current_app.config['GEMINI_API_KEY'])
+    model=genai.GenerativeModel("gemini-2.5-flash")
+    
+    
+    # prompt
+    prompt = f"""
+    Here are my expenses:
+    {expense_text}
+
+    Please analyse and give me:
+    1. Total spending summary
+    2. Which category I spent most on
+    3. Any unusual or high spending
+    4. Simple tips to save money
+    5. Monthly breakdown
+
+    Keep it simple and easy to understand.
+    """
+
+    response = model.generate_content(prompt)
+
+    return jsonify({
+        "insights": response.text
+    }), 200    
 
 
     

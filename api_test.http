@@ -32,3 +32,6 @@ Content-Type: application/json
 ###
 DELETE http://127.0.0.1:5000/api/expenses/1
 
+###
+GET http://127.0.0.1:5000/api/expenses/ai-insights
+Content-Type: application/json
