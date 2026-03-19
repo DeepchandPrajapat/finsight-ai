@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Expense Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <nav class="bg-white shadow-md mb-8">
@@ -40,7 +41,7 @@
     </div>
 
     <!-- block 2 - pie chart and ai insights -->
-    <div class="flex gap-6 mb-8">
+    <div class="grid grid-cols-2 gap-6 mb-8">
 
         <!-- left - pie chart -->
         <div  class="bg-white p-6 rounded-xl shadow-md flex-1">
@@ -81,5 +82,6 @@
 
 </div>
 
+<script src="../script/dashboard.js"></script>
 </body>
 </html>
