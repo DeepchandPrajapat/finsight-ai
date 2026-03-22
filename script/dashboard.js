@@ -76,7 +76,7 @@ function drawPieChart(expenses) {
     // step 3 - draw the chart
     const ctx = document.getElementById("pie-chart").getContext("2d");
     new Chart(ctx, {
-        type: "pie",
+        type: "doughnut",
         data: {
             labels: labels,
             datasets: [{
@@ -95,15 +95,22 @@ function drawPieChart(expenses) {
 }
 
 async function fetchInsights() {
-    const box = document.getElementById("insights-box");
-    box.textContent = "Loading insights...";
+    const insightText = document.getElementById("insight-text");
+    const recommendationText = document.getElementById("recommendation-text");
+    const alertText = document.getElementById("alert-text");
 
     try {
         const response = await fetch(INSIGHTS_URL);
         const data = await response.json();
-        box.textContent = data.insights;
+
+        insightText.textContent = data.insight;
+        recommendationText.textContent = data.recommendation;
+        alertText.textContent = data.alert;
+
     } catch (error) {
-        box.textContent = "Failed to load insights. Try again!";
+        insightText.textContent = "Could not load insights.";
+        recommendationText.textContent = "Please try again.";
+        alertText.textContent = "No alerts at this time.";
     }
 }
 // run on page load
