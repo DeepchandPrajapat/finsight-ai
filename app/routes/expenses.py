@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify,current_app
 from ..models import Expense
 from ..extensions import db
 import json
-import google.generativeai as genai
+from google import genai
 
 expenses_bp = Blueprint(
     "expenses",
@@ -103,22 +103,20 @@ def delete_expense(expense_id):
     
     return jsonify({"message": "Expense deleted successfully"}), 200
 
-@expenses_bp.route("/ai-insights",methods=["GET"])
+
+@expenses_bp.route("/ai-insights", methods=["GET"])
 def get_ai_insights():
-    expenses=Expense.query.all()
-    
+    expenses = Expense.query.all()
+
     if not expenses:
         return jsonify({"error": "No expenses found"}), 404
-    
-    expense_text=""
+
+    expense_text = ""
     for expense in expenses:
         expense_text += f"Category: {expense.category}, Amount: {expense.amount}, Description: {expense.description}, Date: {expense.created_at.strftime('%Y-%m-%d')}\n"
-        
-    genai.configure(api_key=current_app.config['GEMINI_API_KEY'])
-    model=genai.GenerativeModel("gemini-2.5-flash")
-    
-    
-    # prompt
+
+    client = genai.Client(api_key=current_app.config['GEMINI_API_KEY'])
+
     prompt = f"""
         Here are my expenses in Indian Rupees (INR):
         {expense_text}
@@ -138,7 +136,11 @@ def get_ai_insights():
         - use INR (₹) for amounts
     """
 
-    response = model.generate_content(prompt)
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
 
     try:
         data = json.loads(response.text)
@@ -153,6 +155,3 @@ def get_ai_insights():
             "recommendation": "Please try again.",
             "alert": "No alerts at this time."
         }), 200
-
-
-    
