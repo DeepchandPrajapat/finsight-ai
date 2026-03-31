@@ -1,5 +1,5 @@
-const API_URL = "http://127.0.0.1:5000/api/expenses/";
-const INSIGHTS_URL = "http://127.0.0.1:5000/api/expenses/ai-insights";
+const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
+const INSIGHTS_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/ai-insights";
 
 async function loadDashboard() {
     const response = await fetch(API_URL);

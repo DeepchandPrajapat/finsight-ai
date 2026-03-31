@@ -35,3 +35,6 @@ DELETE http://127.0.0.1:5000/api/expenses/1
 ###
 GET http://127.0.0.1:5000/api/expenses/ai-insights
 Content-Type: application/json
+
+### Get all expenses
+GET https://spendwise-ai-mn0e.onrender.com/api/expenses/
