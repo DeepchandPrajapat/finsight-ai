@@ -40,7 +40,7 @@ def create_expense():
     
 @expenses_bp.route("/",methods=["GET"])
 def get_all_expenses():
-    expenses = Expense.query.all()
+    expenses = Expense.query.order_by(Expense.created_at.desc()).all()
 
     result = []
     for expense in expenses:

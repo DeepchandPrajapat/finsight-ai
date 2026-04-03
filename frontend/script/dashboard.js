@@ -43,7 +43,7 @@ function showRecentExpenses(expenses) {
     const tbody = document.getElementById("recent-expenses");
     tbody.innerHTML = "";
 
-    const recent = expenses.slice(-5).reverse();
+    const recent = expenses.slice(0, 5); // show only top 5 recent expenses
 
     recent.forEach((expense) => {
         const row = document.createElement("tr");
