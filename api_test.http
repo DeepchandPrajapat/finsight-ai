@@ -38,3 +38,17 @@ Content-Type: application/json
 
 ### Get all expenses
 GET https://spendwise-ai-mn0e.onrender.com/api/expenses/
+
+###
+http://127.0.0.1:5000/api/budget?month=3&year=2026
+Content-Type: application/json
+
+###
+POST http://127.0.0.1:5000/api/budget
+Content-Type: application/json
+
+{
+  "amount": 10000,
+  "month": 3,
+  "year": 2026
+}

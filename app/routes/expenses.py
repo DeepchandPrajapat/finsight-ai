@@ -10,6 +10,8 @@ expenses_bp = Blueprint(
     url_prefix="/api/expenses"
 )
 
+budget_bp = Blueprint("budget", __name__)
+
 @expenses_bp.route("/", methods=["POST"])
 def create_expense():
     data = request.get_json()
@@ -155,3 +157,4 @@ def get_ai_insights():
             "recommendation": "Please try again.",
             "alert": "No alerts at this time."
         }), 200
+        

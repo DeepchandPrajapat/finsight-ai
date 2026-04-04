@@ -1,10 +1,15 @@
 const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
 const INSIGHTS_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/ai-insights";
+const BUDGET_URL = "https://spendwise-ai-mn0e.onrender.com/api/budget";
+
+let expenses = [];
+
 
 async function loadDashboard() {
     const response = await fetch(API_URL);
-    const expenses = await response.json();
+    expenses = await response.json();
 
+    updateMonthlyCard();
     updateTotalSpending(expenses);
     updateMonthSpending(expenses);
     showRecentExpenses(expenses);
@@ -36,7 +41,7 @@ function updateMonthSpending(expenses) {
         }
     });
 
-    document.getElementById("month-spending").textContent = "₹" + total;
+    document.getElementById("monthly-amount").textContent = "₹" + total;
 }
 
 function showRecentExpenses(expenses) {
@@ -113,6 +118,84 @@ async function fetchInsights() {
         alertText.textContent = "No alerts at this time.";
     }
 }
+
+async function fetchBudget(month, year) {
+    const res = await fetch(`${BUDGET_URL}?month=${month}&year=${year}`);
+    const data = await res.json();
+    return data.amount;
+}
+
+function openBudgetModal() {
+    const modal = document.getElementById("budget-modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+}
+
+function closeBudgetModal() {
+    const modal = document.getElementById("budget-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+}
+
+async function saveBudget() {
+    const amount = document.getElementById("budget-input").value;
+
+    const now = new Date();
+    const month = now.getMonth()+1;
+    const year = now.getFullYear();
+
+    await fetch(BUDGET_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            amount: Number(amount),
+            month,
+            year
+        })
+    });
+
+    closeBudgetModal();
+    updateMonthlyCard();
+}
+
+async function updateMonthlyCard() {
+    const now = new Date();
+    const month = now.getMonth()+1;
+    const year = now.getFullYear();
+
+    const budget = await fetchBudget(month, year);
+
+    const monthlyExpenses = expenses.filter(exp => {
+        const date = new Date(exp.created_at);
+        return date.getMonth()+1 === month && date.getFullYear() === year;
+    });
+
+    const totalSpent = monthlyExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+    const percent = budget > 0 ? (totalSpent / budget) * 100 : 0;
+
+    document.getElementById("monthly-amount").textContent = `₹${totalSpent.toFixed(2)}`;
+
+    document.getElementById("budget-text").textContent =
+        budget > 0
+            ? `${Math.round(percent)}% of budget used`
+            : "Set your monthly budget";
+
+    const bar = document.getElementById("budget-bar");
+    bar.style.width = Math.min(percent, 100) + "%";
+
+    if (percent < 50) {
+        bar.className = "bg-emerald-500 h-2 rounded-full";
+    } else if (percent < 80) {
+        bar.className = "bg-yellow-500 h-2 rounded-full";
+    } else {
+        bar.className = "bg-red-500 h-2 rounded-full";
+    }
+}
+
 // run on page load
 loadDashboard();
 fetchInsights();
+updateMonthlyCard();
