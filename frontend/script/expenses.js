@@ -1,3 +1,4 @@
+
 const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
 let allExpenses = [];
 
@@ -128,5 +129,27 @@ async function saveExpense(id) {
 function cancelEdit() {
     fetchExpenses();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.getElementById("sidebar");
+    const main = document.querySelector("main");
+    const btn = document.getElementById("toggle-btn");
+
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (!isHidden) {
+        // Sidebar is OPEN → adjust layout
+        main.classList.add("ml-56");
+        btn.classList.add("bg-emerald-100");
+    } else {
+        // Sidebar is CLOSED
+        main.classList.remove("ml-56");
+        btn.classList.remove("bg-emerald-100");
+    }
+});
+
+
+
+updateGreeting();
 
 fetchExpenses();

@@ -1,4 +1,4 @@
-import { getStatusAndColor } from "./utils.js";
+
 const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
 const INSIGHTS_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/ai-insights";
 const BUDGET_URL = "https://spendwise-ai-mn0e.onrender.com/api/budget";
@@ -193,7 +193,38 @@ async function updateMonthlyCard() {
     bar.className = `${result.color} h-2 rounded-full`;
 }
 
-// run on page load
+function updateMonthTitle() {
+    const now = new Date();
+
+    const monthName = now.toLocaleString("en-IN", { month: "long" });
+
+    const title = document.getElementById("month-title");
+    if (title) {
+        title.textContent = `Monthly Spending (${monthName})`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.getElementById("sidebar");
+    const main = document.querySelector("main");
+    const btn = document.getElementById("toggle-btn");
+
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (!isHidden) {
+        // Sidebar is OPEN → adjust layout
+        main.classList.add("ml-56");
+        btn.classList.add("bg-emerald-100");
+    } else {
+        // Sidebar is CLOSED
+        main.classList.remove("ml-56");
+        btn.classList.remove("bg-emerald-100");
+    }
+});
+
+
+updateGreeting();
 loadDashboard();
+updateMonthTitle();
 fetchInsights();
 updateMonthlyCard();

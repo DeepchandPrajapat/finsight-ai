@@ -8,6 +8,13 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+      * {
+          font-family: 'Inter', sans-serif;
+      }
+  </style>
   <style>
     body::before {
         content: '';
@@ -26,50 +33,113 @@
     }
 </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex">
-    <!-- SIDEBAR -->
-    <aside class="w-56 min-h-screen bg-[rgb(4,19,32)] text-white flex flex-col">
-      <div class="px-6 py-6 border-b border-white/10 flex items-center gap-3">
-        <!-- rupee icon -->
-        <i
-          class="fa-solid fa-money-bill-transfer text-2xl leading-none"
-          style="color: rgb(52, 211, 153)"
-        ></i>
-        <!-- two tone text -->
-        <span class="text-xl font-bold">
-          <span class="text-white">FinSight</span
-          ><span class="text-emerald-400"> AI</span>
+<body class="bg-gray-100 min-h-screen flex pt-14">
+    
+    <!-- TOP STICKY NAVBAR -->
+    <div
+      id="top-navbar"
+      class="fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-50 shadow-md"
+    >
+      <!-- LEFT: toggle + logo + name -->
+      <div class="flex items-center gap-3">
+        <!-- toggle button -->
+        <button
+          id="toggle-btn"
+          onclick="toggleSidebar()"
+          class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-emerald-100 transition active:scale-95"
+        >
+          <i class="fa-solid fa-bars text-emerald-500 text-2xl"></i>
+        </button>
+
+        <!-- logo -->
+        <div class="flex items-center">
+          <img
+            src="assets/logo4.png"
+            class="h-12 object-contain scale-150 translate-y-[-10px]"
+          />
+        </div>
+
+        <!-- app name -->
+        <span
+          class="text-2xl font-bold hidden sm:inline cursor-pointer hover:opacity-80 transition"
+        >
+          <span class="text-gray-800">FinSight</span>
+          <span class="text-emerald-500"> AI</span>
         </span>
+      </div>
+
+      <!-- middle (optional for mobile only) -->
+      <span class="text-md font-semibold text-gray-800 md:hidden">
+        FinSight AI
+      </span>
+
+      <!-- right side -->
+      <div class="flex items-center gap-2">
+        <button
+          class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition"
+        >
+          <i class="fa-solid fa-bell text-gray-600 text-xl"></i>
+        </button>
+        <button
+          class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition"
+        >
+          <i class="fa-solid fa-circle-user text-gray-600 text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- SIDEBAR -->
+    <aside
+      id="sidebar"
+      class="w-56 min-h-screen bg-[rgb(4,19,32)] text-white flex flex-col fixed top-14 left-0 z-40"
+    >
+      <!-- greeting -->
+      <div class="px-5 pt-5 pb-4 border-b border-white/10 text-center">
+        <p
+          id="greeting-text"
+          class="text-white font-semibold text-base leading-tight"
+        ></p>
+        <p id="date-text" class="text-white/60 text-sm mt-1"></p>
       </div>
 
       <!-- navigation links -->
       <nav class="flex-1 px-4 py-6 flex flex-col gap-2">
-        <a href="index.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition">
-          <i class="fa-solid fa-chart-pie"></i>
+        <a
+          href="index.html"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrap"
+        >
+          <i class="fa-solid fa-chart-pie w-5 text-center"></i>
           Dashboard
         </a>
-        <a href="expenses.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition">
-          <i class="fa-solid fa-list"></i>
+        <a
+          href="expenses.html"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrapp"
+        >
+          <i class="fa-solid fa-list w-5 text-center"></i>
           All Expenses
         </a>
-        <a href="add-expense.html" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-emerald-600/30 text-emerald-400 font-medium">
-          <i class="fa-solid fa-plus"></i>
+        <a
+          href="add-expense.html"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-emerald-600/30 text-emerald-400 font-medium whitespace-nowrap"
+        >
+          <i class="fa-solid fa-plus w-5 text-center"></i>
           Add Expense
         </a>
-        <a href="budget-history.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition">
-          <i class="fa-solid fa-clock-rotate-left"></i>
+        <a
+          href="budget-history.html"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrapp"
+        >
+          <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
           Budget History
         </a>
       </nav>
 
-        <!-- bottom -->
-        <div class="px-6 py-4 border-t border-white/10">
-            <p class="text-white/50 text-sm">SpendWise AI v1.0</p>
-        </div>
+      <!-- bottom section -->
+      <div class="px-6 py-4 border-t border-white/10">
+        <p class="text-white/50 text-sm">FinSight AI v1.0</p>
+      </div>
     </aside>
-
     <!-- MAIN CONTENT -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <main id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300">
         <!-- page header -->
         <div class="mb-8">
             <h1 class="text-2xl font-bold text-gray-800">Add New Expense</h1>
@@ -122,7 +192,9 @@
         </div>
     </main>
 
+    <script src="script/utils.js"></script>
     <script src="script/add-expense.js"></script>
+
 </body>
 </html>
 
