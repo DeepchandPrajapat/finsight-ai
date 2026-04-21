@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify,current_app
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models import Expense
 from ..extensions import db
 import json
@@ -13,7 +14,9 @@ expenses_bp = Blueprint(
 budget_bp = Blueprint("budget", __name__)
 
 @expenses_bp.route("/", methods=["POST"])
+@jwt_required() 
 def create_expense():
+    user_id = get_jwt_identity()
     data = request.get_json()
 
     if not data:
@@ -27,6 +30,7 @@ def create_expense():
         return jsonify({"error": "Amount and category are required"}), 400
 
     expense = Expense(
+        user_id=user_id,
         amount=amount,
         category=category,
         description=description
@@ -41,8 +45,10 @@ def create_expense():
     }), 201
     
 @expenses_bp.route("/",methods=["GET"])
+@jwt_required() 
 def get_all_expenses():
-    expenses = Expense.query.order_by(Expense.created_at.desc()).all()
+    user_id = get_jwt_identity() 
+    expenses = Expense.query.filter_by(user_id=user_id).order_by(Expense.created_at.desc()).all()
 
     result = []
     for expense in expenses:
@@ -58,8 +64,10 @@ def get_all_expenses():
     return jsonify(result), 200
 
 @expenses_bp.route("/<int:expense_id>",methods=["GET"])
+@jwt_required() 
 def get_expense(expense_id):
-    expense = Expense.query.get(expense_id)
+    user_id = get_jwt_identity()
+    expense = Expense.query.filter_by(id=expense_id, user_id=user_id).first()
     
     if not expense:
         return jsonify({"error": "Expense not found"}), 404
@@ -69,13 +77,15 @@ def get_expense(expense_id):
     "amount": expense.amount,
     "category": expense.category,
     "description": expense.description,
-    "created_at": expense.date.isoformat(),
-    "updated_at": expense.date.isoformat()
+    "created_at": expense.created_at.isoformat(),
+    "updated_at": expense.updated_at.isoformat()
 }), 200
 
 @expenses_bp.route("/<int:expense_id>", methods=["PATCH"])
+@jwt_required() 
 def update_expense(expense_id):
-    expense = Expense.query.get(expense_id)
+    user_id = get_jwt_identity()
+    expense = Expense.query.filter_by(id=expense_id, user_id=user_id).first()
 
     if not expense:
         return jsonify({"error": "Expense not found"}), 404
@@ -94,8 +104,10 @@ def update_expense(expense_id):
     return jsonify({"message": "Expense updated successfully"}), 200
 
 @expenses_bp.route("/<int:expense_id>", methods=["DELETE"])
+@jwt_required() 
 def delete_expense(expense_id):
-    expense = Expense.query.get(expense_id)
+    user_id = get_jwt_identity()
+    expense = Expense.query.filter_by(id=expense_id, user_id=user_id).first()
     
     if not expense:
         return jsonify({"error": "Expense not found"}), 404
@@ -107,8 +119,10 @@ def delete_expense(expense_id):
 
 
 @expenses_bp.route("/ai-insights", methods=["GET"])
+@jwt_required() 
 def get_ai_insights():
-    expenses = Expense.query.all()
+    user_id = get_jwt_identity()
+    expenses = Expense.query.filter_by(user_id=user_id).all()
 
     if not expenses:
         return jsonify({"error": "No expenses found"}), 404

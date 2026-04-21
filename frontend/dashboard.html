@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | FinSight AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <style>
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle at top right, rgba(52, 211, 153, 0.15), transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    main {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex pt-14">
+
+    <!-- TOP STICKY NAVBAR -->
+    <div id="top-navbar" class="fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-50 shadow-md">
+        
+        <!-- LEFT: toggle + logo + name -->
+        <div class="flex items-center gap-3">
+            
+            <!-- toggle button -->
+            <button id="toggle-btn" onclick="toggleSidebar()" 
+                class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-emerald-100 transition active:scale-95">
+                
+                <i class="fa-solid fa-bars text-emerald-500 text-2xl"></i>
+
+            </button>
+
+            <!-- logo -->
+            <div class="flex items-center">
+                <img src="assets/logo4.png" 
+                    class="h-12 object-contain scale-150 translate-y-[-10px]">
+            </div>
+
+            <!-- app name -->
+            <span class="text-2xl font-bold hidden sm:inline cursor-pointer hover:opacity-80 transition">
+                <span class="text-gray-800">FinSight</span>
+                <span class="text-emerald-500"> AI</span>
+            </span>
+
+        </div>
+
+        <!-- middle (optional for mobile only) -->
+        <span class="text-md font-semibold text-gray-800 md:hidden">
+            FinSight AI
+        </span>
+
+        <!-- right side -->
+        <div class="flex items-center gap-2">
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+                <i class="fa-solid fa-bell text-gray-600 text-xl"></i>
+            </button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+                <i class="fa-solid fa-circle-user text-gray-600 text-xl"></i>
+            </button>
+        </div>
+
+    </div>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="w-56 min-h-screen bg-[rgb(4,19,32)] text-white flex flex-col fixed top-14 left-0 z-40">
+
+    <!-- greeting -->
+    <div class="px-5 pt-5 pb-4 border-b border-white/10 text-center">
+        <p id="greeting-text" class="text-white font-semibold text-base leading-tight"></p>
+        <p id="date-text" class="text-white/60 text-sm mt-1"></p>
+    </div>
+
+    <!-- navigation links -->
+    <nav class="flex-1 px-4 py-6 flex flex-col gap-2">
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-emerald-600/30 text-emerald-400 font-medium whitespace-nowrap">
+            <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+            Dashboard
+        </a>
+        <a href="expenses.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrap">
+            <i class="fa-solid fa-list w-5 text-center"></i>
+            All Expenses
+        </a>
+        <a href="add-expense.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrap">
+            <i class="fa-solid fa-plus w-5 text-center"></i>
+            Add Expense
+        </a>
+        <a href="budget-history.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition whitespace-nowrap">
+            <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+            Budget History
+        </a>
+    </nav>
+
+    <!-- bottom section -->
+    <div class="px-6 py-4 border-t border-white/10">
+        <p class="text-white/50 text-sm">FinSight AI v1.0</p>
+    </div>
+
+</aside>
+
+    <main id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300">
+        <!-- welcome -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Welcome Back!</h1>
+            <p class="text-gray-500 mt-1">Here's your financial overview</p>
+        </div>
+
+        <!-- main grid - left and right -->
+        <div class="grid grid-cols-3 gap-6 mb-8">
+
+            <!-- LEFT SIDE -->
+            <div class="col-span-2 flex flex-col gap-6">
+                <!-- summary cards -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <p class="text-gray-800 font-bold text-xl mb-2">Total Spending</p>
+                        <p id="total-spending" class="text-3xl font-bold text-gray-800">₹0</p>
+                        <div class="h-16 mt-3">
+                            <canvas id="sparkline-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+
+                        <p id="month-title" class="text-gray-800 font-bold text-xl mb-2">Monthly Spending</p>
+
+                        <p id="monthly-amount" class="text-3xl font-bold text-gray-800 mb-3">
+                            ₹0
+                        </p>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div id="budget-bar" class="bg-emerald-500 h-2 rounded-full"></div>
+                        </div>
+
+                        <!-- Text -->
+                        <p id="budget-text" class="text-xs text-gray-500 mb-3">
+                            Set your monthly budget
+                        </p>
+
+                        <!-- Button -->
+                        <button onclick="openBudgetModal()"
+                            class="text-sm text-blue-500 hover:text-blue-700 font-medium">
+                            Set Budget
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- pie chart below cards -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <p class="text-gray-800 font-bold text-xl mb-4">Spending by Category</p> 
+                    <canvas id="pie-chart" style="max-height: 250px;"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-4">
+                <div class="flex justify-between items-center mb-4">
+                    <!-- bot icon and name -->
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <i class="fa-solid fa-robot text-emerald-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800 ">FinBot AI</h2>
+                            <p class="text-xs text-gray-400">Your financial advisor</p>
+                        </div>
+                    </div>
+                    <!-- refresh button -->
+                    <button onclick="fetchInsights()" class="text-sm text-emerald-500 hover:text-emerald-600 transition">
+                        Refresh
+                    </button>
+                </div>
+
+                <!-- insight card -->
+                <div class="flex gap-3 p-3 rounded-lg bg-blue-50">
+                    <i class="fa-solid fa-circle-info text-blue-500 mt-1"></i>
+                    <div>
+                        <p class="text-sm font-semibold  mb-1">Insight</p>
+                        <p id="insight-text" class="text-sm text-gray-700">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- recommendation card -->
+                <div class="flex gap-3 p-3 rounded-lg bg-emerald-50">
+                    <i class="fa-solid fa-lightbulb text-emerald-500 mt-1"></i>
+                    <div>
+                        <p class="text-sm font-semibold mb-1">Recommendation</p>
+                        <p id="recommendation-text" class="text-sm text-gray-700">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- alert card -->
+                <div class="flex gap-3 p-3 rounded-lg bg-red-50">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500 mt-1"></i>
+                    <div>
+                        <p class="text-sm font-semibold mb-1">Alert</p>
+                        <p id="alert-text" class="text-sm text-gray-700">Loading...</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>    
+        <!-- recent expenses -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+            <h2 class="text-gray-800 font-bold text-xl mb-2">Recent Expenses</h2>
+            <table class="w-full text-sm text-gray-600">
+                <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                    <tr>
+                        <th class="px-4 py-3 text-left">Category</th>
+                        <th class="px-4 py-3 text-left">Description</th>
+                        <th class="px-4 py-3 text-left">Amount</th>
+                        <th class="px-4 py-3 text-left">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-expenses"></tbody>
+            </table>
+        </div>
+        <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+
+    <div class="bg-white p-6 rounded-xl shadow-lg w-80">
+
+        <h2 class="text-lg font-semibold mb-4">Set Monthly Budget</h2>
+
+        <input id="budget-input" type="number" placeholder="Enter amount"
+            class="w-full border p-2 rounded-lg mb-4"/>
+
+        <div class="flex justify-end gap-2">
+            <button onclick="closeBudgetModal()"
+                class="px-4 py-2 bg-gray-300 rounded-lg">
+                Cancel
+            </button>
+
+            <button onclick="saveBudget()"
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                Save
+            </button>
+        </div>
+
+    </div>
+</div>
+
+    </main>    
+
+    <script src="script/utils.js"></script>
+    <script src="script/dashboard.js"></script>
+
+  </body>
+</html>

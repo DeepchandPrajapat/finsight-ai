@@ -1,23 +1,26 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models import Budget
 from ..extensions import db
 
 budget_bp = Blueprint("budget", __name__)
 
 @budget_bp.route("/api/budget", methods=["POST"])
+@jwt_required()
 def set_budget():
+    user_id = get_jwt_identity()
     data = request.json
 
     amount = data.get("amount")
     month = data.get("month")
     year = data.get("year")
 
-    budget = Budget.query.filter_by(month=month, year=year).first()
+    budget = Budget.query.filter_by(user_id=user_id, month=month, year=year).first()
 
     if budget:
         budget.amount = amount
     else:
-        budget = Budget(amount=amount, month=month, year=year)
+        budget = Budget(user_id=user_id, amount=amount, month=month, year=year)
         db.session.add(budget)
 
     db.session.commit()
@@ -25,11 +28,13 @@ def set_budget():
     return jsonify({"message": "Budget saved"})      
 
 @budget_bp.route("/api/budget", methods=["GET"])
+@jwt_required()
 def get_budget():
+    user_id = get_jwt_identity()
     month = request.args.get("month", type=int)
     year = request.args.get("year", type=int)
 
-    budget = Budget.query.filter_by(month=month, year=year).first()
+    budget = Budget.query.filter_by(user_id=user_id, month=month, year=year).first()
 
     if budget:
         return jsonify({"amount": budget.amount})
@@ -37,16 +42,18 @@ def get_budget():
         return jsonify({"amount": 0})  
 
 @budget_bp.route("/api/budget/history", methods=["GET"])
+@jwt_required()
 def get_budget_history():
-    # get all budgets ordered by year and month
-    budgets = Budget.query.order_by(Budget.year.desc(), Budget.month.desc()).all()
+    user_id = get_jwt_identity()
+    # get all budgets ordered by user_id, year and month
+    budgets = Budget.query.filter_by(user_id=user_id).order_by(Budget.year.desc(), Budget.month.desc()).all()
 
     if not budgets:
         return jsonify([])
 
     # get all expenses
     from ..models import Expense
-    expenses = Expense.query.all()
+    expenses = Expense.query.filter_by(user_id=user_id).all()
 
     result = []
     for budget in budgets:

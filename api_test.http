@@ -56,3 +56,22 @@ Content-Type: application/json
 ###
 GET http://127.0.0.1:5000/api/budget/history
 Content-Type: application/json
+
+### Register
+POST http://127.0.0.1:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Test User",
+    "email": "test@gmail.com",
+    "password": "test123"
+}
+
+### Login
+POST http://127.0.0.1:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "test123"
+}
