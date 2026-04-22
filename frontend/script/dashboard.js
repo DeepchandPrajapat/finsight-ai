@@ -398,7 +398,7 @@ function drawSparkline(expenses) {
   });
 }
 async function fetchUser() {
-  const res = await fetch("http://127.0.0.1:5000/me", {
+  const res = await fetch("https://spendwise-ai-mn0e.onrender.com/me", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("access_token"),
     },

@@ -17,7 +17,7 @@ def create_app():
 
     migrate.init_app(app, db) 
 
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     from .routes.expenses import expenses_bp
     from .routes.budget import budget_bp
