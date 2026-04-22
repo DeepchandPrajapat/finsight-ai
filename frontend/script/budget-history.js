@@ -1,10 +1,14 @@
 
 const BUDGET_HISTORY_API = "https://spendwise-ai-mn0e.onrender.com/api/budget/history";
 
-async function fetchBudgetHistory() {
-    const res = await fetch(BUDGET_HISTORY_API);
-    const data = await res.json();
 
+async function fetchBudgetHistory() {
+    const res = await fetch(BUDGET_HISTORY_API, {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        }
+    });
+    const data = await res.json();
     displayBudgetHistory(data);
 }
 

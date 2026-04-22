@@ -1,5 +1,6 @@
 POST http://127.0.0.1:5000/api/expenses/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3Njg1ODU2OSwianRpIjoiNDg0ZDRjNDktYWY4Ni00NjVkLWIzOGItYzgwNTFiMDQ2Njk2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NzY4NTg1NjksImNzcmYiOiI0ZDVjMDljZC1iZDg0LTRmZmItYTcyMS1jZjQ3ZmY3MDNiYjAiLCJleHAiOjE3NzY4NTk0Njl9.WHj5V5MLOmbaqZHCnt-hXb6dpoSdy8dK2X5PugfUoz4
 
 {
   "amount": 250,

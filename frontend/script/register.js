@@ -555,24 +555,27 @@ function initLoginForm() {
   var nameInput = document.querySelector("#registerName");
   var originalEmail = email;
 
-  nameInput.addEventListener("focus", function (e) {
-    email = nameInput;
-    emailCoords = getPosition(nameInput);
-    emailScrollMax = nameInput.scrollWidth;
-    onEmailFocus(e);
-  });
+  if (nameInput) {
+    nameInput.addEventListener("focus", function (e) {
+      email = nameInput;
+      emailCoords = getPosition(nameInput);
+      emailScrollMax = nameInput.scrollWidth;
+      onEmailFocus(e);
+    });
 
-  nameInput.addEventListener("blur", function (e) {
-    email = originalEmail;
-    emailCoords = getPosition(originalEmail);
-    emailScrollMax = originalEmail.scrollWidth;
-    onEmailBlur(e);
-  });
+    nameInput.addEventListener("blur", function (e) {
+      email = originalEmail;
+      emailCoords = getPosition(originalEmail);
+      emailScrollMax = originalEmail.scrollWidth;
+      onEmailBlur(e);
+    });
 
-  nameInput.addEventListener("input", function (e) {
-    email = nameInput;
-    onEmailInput(e);
-  });
+    nameInput.addEventListener("input", function (e) {
+      email = nameInput;
+      onEmailInput(e);
+    });
+  }
+
 
   // handle events for password input
   password.addEventListener("focus", onPasswordFocus);

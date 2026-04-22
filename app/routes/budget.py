@@ -23,9 +23,12 @@ def set_budget():
         budget = Budget(user_id=user_id, amount=amount, month=month, year=year)
         db.session.add(budget)
 
-    db.session.commit()
-
-    return jsonify({"message": "Budget saved"})      
+    try:
+        db.session.commit()
+        return jsonify({"message": "Budget saved"})
+    except Exception as e:
+        db.session.rollback()          
+        return jsonify({"error": str(e)}), 500     
 
 @budget_bp.route("/api/budget", methods=["GET"])
 @jwt_required()

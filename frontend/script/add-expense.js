@@ -1,5 +1,6 @@
 const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
 
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // 🔥 SIDEBAR SYNC FIX
@@ -40,7 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access_token")
+            },
             body: JSON.stringify({
                 amount: Number(amount),
                 category: finalCategory,
